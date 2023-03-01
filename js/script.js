@@ -2,9 +2,13 @@ function getById(elementId) {
     return document.getElementById(elementId)
 }
 
+function getQuerySelectedAllLength(elementsClass) {
+    return document.querySelectorAll(elementsClass).length;
+}
+
 
 function selectedPlayer(PlayerName, btnId) {
-    const selectedLi = document.querySelectorAll('.selected').length;
+    const selectedLi = getQuerySelectedAllLength('.selected');
 
     if (selectedLi >= 5) {
         alert('You can not select more then 5 players')
@@ -26,15 +30,39 @@ function selectedPlayer(PlayerName, btnId) {
 
 
 function calculatePerPlayer() {
-    const selectedLi = document.querySelectorAll('.selected').length;
-    const perPlayerExpenseField = parseFloat(getById('per-player-expense').value);
+    const selectedLi = getQuerySelectedAllLength('.selected');
+    const perPlayerExpenseField = getById('per-player-expense-field');
+    const expenseFieldValue =  parseFloat(perPlayerExpenseField.value);
 
-    if (perPlayerExpenseField <= 0 || isNaN(perPlayerExpenseField)) {
+    if (expenseFieldValue <= 0 || isNaN(expenseFieldValue)) {
         alert('Invalid Input')
     } else if (selectedLi <= 0) {
         alert('You have not select any player')
-    }
+    }else {
+        getById('players-expenses').innerText =  selectedLi * expenseFieldValue;
+        perPlayerExpenseField.value = '';
+    };
+}
 
-    const totalPlayerExpense = selectedLi * perPlayerExpenseField
-    console.log(totalPlayerExpense);
+function calculateTotal() {
+    const managerExpenseField = getById('manager-expense-field');
+    const coachExpenseField = getById('coach-expense-field');
+
+    const floatManagerFieldValue = parseFloat(managerExpenseField.value);
+    const floatCoachFieldValue = parseFloat(coachExpenseField.value);
+
+
+    const playerExpense = parseFloat(getById('players-expenses').innerText);
+    const total = getById('total');
+
+    if (floatManagerFieldValue <= 0 || isNaN(floatCoachFieldValue) || floatCoachFieldValue <= 0 || isNaN(floatCoachFieldValue)) {
+        alert('Invalid input, Please feel up your input with valid number')
+    } else if (playerExpense <= 0) {
+        alert('you have not calculate the per player expense')
+    } else {
+        const totalExpense = playerExpense + floatCoachFieldValue + floatCoachFieldValue;
+        managerExpenseField.value = '';
+        coachExpenseField.value = '';
+        total.innerText = totalExpense;
+    };
 }
